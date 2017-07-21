@@ -1,0 +1,54 @@
+# VBA-Practice1
+Option Explicit
+Option Base 1
+'方法一 簡單移動平均
+Function simpleMovingAverage(stockPrices As Variant) As Variant
+
+    simpleMovingAverage = Application.Average(stockPrices)
+
+End Function
+'方法二 加權移動平均
+Function weightedMovingAverage(stockPrices As Variant) As Variant
+
+    Dim elements As Variant
+    Dim denominator As Integer
+    Dim counts As Integer
+
+    For Each elements In stockPrices
+        counts = counts + 1
+        denominator = denominator + counts
+        weightedMovingAverage = weightedMovingAverage + elements * counts
+    Next elements
+
+    weightedMovingAverage = weightedMovingAverage / denominator
+
+End Function
+'方法三 指數移動平均數
+Function exponentialMovingAverage(stockPrices As Variant) As Variant
+
+    Dim elements As Variant
+    Dim weight As Double
+    Dim alpha As Double: alpha = 0.97
+    Dim powerIndex As Integer: powerIndex = stockPrices.Count
+    Dim total As Double: total = 0
+    Dim denominator
+
+    For Each elements In stockPrices
+        powerIndex = powerIndex - 1
+        weight = alpha ^ powerIndex
+        total = total + elements.Value * weight
+        denominator = denominator + weight
+    Next elements
+
+    exponentialMovingAverage = total / denominator
+
+End Function
+
+'方法選擇函數
+Function movingAverage(stockPrices As Variant, method As String) As Variant
+
+    movingAverage = Application.Run(method, stockPrices)
+
+End Function
+
+
